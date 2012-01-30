@@ -1,0 +1,37 @@
+OpenDRDA is an implementation of the DRDA protocol.  DRDA was developed by IBM 
+as a distributed (two phase commit) protocol for heterogeneous environments.
+It seems to have gotten the most use in MVS and AS/400 environments, but 
+interestingly enough seems to be supported natively by DB2 UDB on Unix, OS/2, 
+and NT platforms as well. That is what I am using to test against.
+
+Building
+--------
+
+First off I wouldn't bother unless you have very limited requirements for this or are interested in helping with the project, it doesn't do much right now.
+
+To build:
+
+./configure
+make
+
+and run the 'server_info' program specifying the host and port of your DRDA enabled server.  If you have an AS/400 or mainframe laying around I'd be interested to know whether the code works against it.
+
+You'll need unixODBC 2.0.x for the ODBC stuff to work, 2.1.0 and above are broken for reasons related to a SQLGetFunctions() change that I still need to look into.
+
+To enable some verbose output modify the Makefile to include -D DRDALOG in the compile and you'll get send/receive packets plus call traces.
+
+The 'createpkg' program creates a default package in DB2 for OpenDRDA to use.
+It must be run using an account with BIND ADD permissions, before some of the
+other programs (tester or unixODBC's isql) will work.
+
+The tester program will attempt to issue a simple select query against the DB2
+'sample' database.
+
+To set up an odbc.ini entry use something like the following:
+
+[sample]
+Driver = /home/bdog/src/opendrda/src/odbc/.libs/libdrdaodbc.so
+Description = DB2 Sample Database
+URL = drda://db2inst2.mypassword@localhost:3506/sample
+
+See the docs/URL document for details on the URL line

@@ -1,0 +1,27 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(src/libdrda/drda.c)
+AM_INIT_AUTOMAKE(opendrda,0.3)
+
+AC_PROG_CC(gcc)
+dnl Checks for programs.
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+AM_PROG_LIBTOOL
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h limits.h unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+AC_C_BIGENDIAN
+
+dnl ---------------------------------------------------------------------
+dnl Compile time options
+dnl ---------------------------------------------------------------------
+
+dnl Checks for library functions.
+
+AC_OUTPUT(src/libdrda/Makefile src/odbc/Makefile src/Makefile Makefile)

@@ -1,0 +1,60 @@
+
+OpenDRDA is an implementation of the DRDA protocol.  DRDA was developed by IBM 
+as a distributed (two phase commit) protocol for heterogeneous environments.
+It seems to have gotten the most use in MVS and AS/400 environments, but 
+interestingly enough seems to be supported natively by DB2 UDB on Unix, OS/2, 
+and NT platforms as well. That is what I am using to test against.
+
+The definitive reference to DRDA can be found at the OpenGroup website as 
+documents C911, C912, and C913.  They were available for free but restricted
+download at the time of this writing.
+
+DRDA comes from a mainframe environment and I found the standards guides 
+rather obtuse at times.  So herein is some terminology and the simplified 
+unix and/or SQL equivalents you may be used to.
+
+Application Server (AS)		-	The DBMS server
+Application Requester (AR)	-	The client program
+Remote Unit of Work (RUOW)	-	A SQL transaction sent to the server
+Distributed Data Model (DDM)	-	This is a mainframe bits on the wire
+							protocol, used by DRDA. It offers a class
+							inheritence mechanism and purports itself
+							to be "object oriented", although I don't
+							see how data alone can be OO.
+Code Point				-	An unique indentifier for a protocol
+							data unit (known in DRDA as a object)
+FDOCA					-	A data description and encapsulation
+							scheme.  The hard part about it, is that
+							a lot of it is not used by DRDA, so while
+							reading through it, take it with a grain of
+							salt.
+
+OpenDRDA aims to initially support DRDA Level 1 AR capabilities and expand 
+from that base.  In plain-speak that means it will be useful for connecting
+to and querying DRDA servers, most notably IBM DB2.
+
+Later, I would like to implement AS (server) functionality and embed that into 
+MySQL, mSQL, Postgresql, Interbase, and any other open-source databases I
+can get my hands on.  Additionally, I'm planning on implementing a gateway
+with another project I work on (FreeTDS) so that Sybase and MS SQL Servers 
+may be treated as DRDA Servers.
+
+Imagine a world where any database can be queried without using a specialized 
+client!  This is what I'm aiming for.  For this reason the code will be licensed
+under a BSDish license (see the file LICENSE) so that it may be integrated into
+any database product, free or commercial without (much) restriction.
+
+So, what's done you ask?
+
+The code can fudge it's way through creating a package and doing an 'exec immediate' SQL statement (that is a SQL statement with no results, such as an update).
+
+It can also issue a query (PRPSQLSTT) and retrieve the results (OPNQRY), but any
+actual code to return the results to the client application are still to be 
+written.
+
+All this needs a pretty wrapper around it, and niceties like error checking are
+pretty much non-existant, but that's why this is pre-alpha code.  So roll up 
+your sleaves and dig in!
+
+Please don't be dissuaded by the lack of error checking in the code.  It is my intention for OpenDRDA to be a very robust implementation in the future.  However, in the interest of putting out something that is capable enough to be of interest to folks who may wish to contribute, what is there currently is a very bare bones sort of thing.
+

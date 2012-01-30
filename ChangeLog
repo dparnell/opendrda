@@ -1,0 +1,19 @@
+Sun Apr 14 20:25:09 EDT 2002	Brian Bruns <camber@ais.org>
+
+	* import implementation of SQLFunctions() from FreeTDS
+
+Mon Mar 18 19:52:51 EST 2002	Brian Bruns <camber@ais.org>
+
+	* include/drda.h: bookkeeping for binding and buffer for storing results
+	* src/libdrda/fdoca.c: broke out binding function to be called from ODBC
+	* src/util.c: add check of typdefnam for endianess handling
+	* src/ddmread.c: store typdefnam
+	* src/odbc.c: too many odbc fixes to list 
+
+Sun Feb  3 12:27:30 EST 2002	Brian Bruns <camber@ais.org>
+
+	* src/libdrda/user.c(drda_set_by_keyvalue): return if strchr() fails 
+	to avoid segfault.
+	* src/libdrda/user.c(drda_set_by_url): tighter check on url scheme. 
+	Allow ':' in preference to '.' as a username/password separator.
+
