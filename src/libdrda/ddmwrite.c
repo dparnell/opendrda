@@ -9,7 +9,7 @@
 
 int ddm_write_rqsdss(DRDA *drda, int typ)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -24,7 +24,7 @@ char *buf;
 }
 int ddm_write_excsat(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -36,9 +36,9 @@ char *buf;
 }
 int ddm_write_extnam(DRDA *drda)
 {
-char *buf;
-char pid[10];
-int  pid_sz;
+    unsigned char *buf;
+    char pid[10];
+    int  pid_sz;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -54,9 +54,10 @@ int  pid_sz;
 
 	return pid_sz + 4;
 }
+
 int ddm_write_mgrlvlls(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -66,9 +67,10 @@ char *buf;
 
 	return 4;
 }
+
 int ddm_write_mgrlvl(DRDA *drda, int codept, int level)
 {
-char *buf;
+    unsigned char *buf;
 
 	/* mgrlvl is a little strange since it has no length field */
 
@@ -83,6 +85,7 @@ char *buf;
 
 	return 4;
 }
+
 int ddm_write_srvclsnm(DRDA *drda)
 {
     unsigned char *buf;
@@ -104,10 +107,11 @@ int ddm_write_srvclsnm(DRDA *drda)
 
 	return name_len + 8;
 }
+
 int ddm_write_srvnam(DRDA *drda,char *servername)
 {
-char *buf;
-int  name_len = strlen(servername);
+    unsigned char *buf;
+    int  name_len = strlen(servername);
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -118,9 +122,10 @@ int  name_len = strlen(servername);
 
 	return name_len + 4;
 }
+
 int ddm_write_accsec(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -130,10 +135,11 @@ char *buf;
 
 	return 4;
 }
+
 int ddm_write_secmgrnm(DRDA *drda, char *secmgr)
 {
-char *buf;
-int secmgr_sz = 0;
+    unsigned char *buf;
+    int secmgr_sz = 0;
 
 	if (secmgr) {
 		secmgr_sz = strlen(secmgr);
@@ -149,9 +155,10 @@ int secmgr_sz = 0;
 
 	return 4 + secmgr_sz;
 }
+
 int ddm_write_secmec(DRDA *drda, int mechanism)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -178,7 +185,7 @@ int ddm_write_secchk(DRDA *drda)
 
 int ddm_write_accrdb(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -188,94 +195,63 @@ char *buf;
 
 	return 4;
 }
+
 int ddm_write_usrid(DRDA *drda, char *username)
 {
-char *buf, *tmpstr;
-int username_len;
-#if 0
-char usrid[11];
-#endif
+    unsigned char *buf, *tmpstr;
+    int username_len;
 
 	buf = &drda->out_buf[drda->out_pos];
 
 	username_len = strlen(username);
 	drda_put_int2(buf, username_len + 4); 
 	drda_put_int2(&buf[2], DDM_USRID); 
-     tmpstr = (char *) malloc(username_len + 1);
-     drda_local_string2remote(drda, username, username_len, tmpstr);
+    tmpstr = (unsigned char *) malloc(username_len + 1);
+    drda_local_string2remote(drda, username, username_len, (char*)tmpstr);
 	memcpy(&buf[4],tmpstr,username_len);
-     free(tmpstr);
+    free(tmpstr);
 	drda->out_pos += 4 + username_len;
 
 	return 4 + username_len;
-#if 0
-	memset(usrid,0x40,11);
-	strncpy(usrid,username,10);
-	drda_put_int2(buf, 14); 
-	drda_put_int2(&buf[2], DDM_USRID); 
-     tmpstr = (char *) malloc(11);
-	memset(tmpstr,0,11);
-     drda_local_string2remote(usrid, 10, tmpstr);
-	memcpy(&buf[4],tmpstr,10);
-     free(tmpstr);
-	drda->out_pos += 14;
-
-	return 14;
-#endif
 }
+
 int ddm_write_password(DRDA *drda, char *password)
 {
-char *buf, *tmpstr;
-int password_len;
-#if 0
-char passwd[11];
-#endif
+    unsigned char *buf, *tmpstr;
+    int password_len;
 
 	buf = &drda->out_buf[drda->out_pos];
 	password_len = strlen(password);
 	drda_put_int2(buf, password_len + 4); 
 	drda_put_int2(&buf[2], DDM_PASSWORD); 
-     tmpstr = (char *) malloc(password_len + 1);
-     drda_local_string2remote(drda, password, password_len, tmpstr);
+    tmpstr = (unsigned char *) malloc(password_len + 1);
+    drda_local_string2remote(drda, password, password_len, (char*)tmpstr);
 	memcpy(&buf[4],tmpstr,password_len);
-     free(tmpstr);
+    free(tmpstr);
 	drda->out_pos += 4 + password_len;
 
 	return 4 + password_len;
-#if 0
-	memset(passwd,0x40,11);
-	strncpy(passwd,password,10);
-	drda_put_int2(buf, 14); 
-	drda_put_int2(&buf[2], DDM_PASSWORD); 
-     tmpstr = (char *) malloc(11);
-	memset(tmpstr,0,11);
-     drda_local_string2remote(passwd, 10, tmpstr);
-	memcpy(&buf[4],tmpstr,10);
-     free(tmpstr);
-	drda->out_pos += 14;
-
-	return 14;
-#endif
 }
+
 int ddm_write_rdbnam(DRDA *drda, char *database)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
 	drda_put_int2(buf, 22); 
 	drda_put_int2(&buf[2], DDM_RDBNAM); 
 
-     drda_local_string2remote_pad(drda, database, 18, &buf[4]);
+    drda_local_string2remote_pad(drda, database, 18, (char*)&buf[4]);
 
 	drda->out_pos += 22;
 
 	return 22;
 }
+
 int ddm_write_rdbacccl(DRDA *drda)
 {
-char *buf;
-char dbname[19];
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -287,15 +263,16 @@ char dbname[19];
 
 	return 6;
 }
+
 int ddm_write_typdefnam(DRDA *drda)
 {
-char *buf;
-/*
-** unless anybody can produce a server in which this typedef (QTDSQLASC, aka 
-** network byte order) does not work, this will be the only typdef we support.
-*/
-/* char *typdefnam = "QTDSQLX86"; */
-char typdefnam[] = {0xd8,0xe3,0xc4,0xe2,0xd8,0xd3,0xc1,0xe2,0xc3};
+    unsigned char *buf;
+    /*
+     ** unless anybody can produce a server in which this typedef (QTDSQLASC, aka 
+     ** network byte order) does not work, this will be the only typdef we support.
+     */
+    /* char *typdefnam = "QTDSQLX86"; */
+    char typdefnam[] = {0xd8,0xe3,0xc4,0xe2,0xd8,0xd3,0xc1,0xe2,0xc3};
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -307,38 +284,41 @@ char typdefnam[] = {0xd8,0xe3,0xc4,0xe2,0xd8,0xd3,0xc1,0xe2,0xc3};
 
 	return 13;
 }
+
 int ddm_write_prdid(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
 	drda_put_int2(buf, 12); 
 	drda_put_int2(&buf[2], DDM_PRDID); 
-	drda_local_string2remote_pad(drda, DRDA_PRDID, 8, &buf[4]);
+	drda_local_string2remote_pad(drda, DRDA_PRDID, 8, (char*)&buf[4]);
 
 	drda->out_pos += 12;
 
 	return 12;
 }
+
 int ddm_write_crrtkn(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
 	drda_put_int2(buf, 23); 
 	drda_put_int2(&buf[2], DDM_CRRTKN);
 	/* DRDA_PRDID (in drda.h) must be exactly 8 chars or this goes to hell */
-	drda_local_string2remote(drda, drda->crrtkn, 19, &buf[4]);
+	drda_local_string2remote(drda, drda->crrtkn, 19, (char*)&buf[4]);
 
 	drda->out_pos += 23;
 
 	return 23;
 }
+
 int ddm_write_typdefovr(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -355,7 +335,7 @@ char *buf;
 
 int ddm_write_excsqlimm(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -368,7 +348,7 @@ char *buf;
 
 int ddm_write_rdbcmtok(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -383,7 +363,7 @@ char *buf;
 
 int ddm_write_pkgnamcsn(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -391,13 +371,13 @@ char *buf;
 	drda_put_int2(&buf[2], DDM_PKGNAMCSN); 
 
 	/* rdbnam */
-	drda_local_string2remote_pad(drda, drda->database, 18, &buf[4]);
+	drda_local_string2remote_pad(drda, drda->database, 18, (char*)&buf[4]);
 
 	/* rdbcolid */
-	drda_local_string2remote_pad(drda, drda->collection, 18, &buf[22]);
+	drda_local_string2remote_pad(drda, drda->collection, 18, (char*)&buf[22]);
 	
 	/* pkgid */
-	drda_local_string2remote_pad(drda, drda->package, 18, &buf[40]);
+	drda_local_string2remote_pad(drda, drda->package, 18, (char*)&buf[40]);
 	
 	/* pkgcstkn */
 	//memset(&buf[58],0x40,8);
@@ -413,8 +393,8 @@ char *buf;
 
 int ddm_write_sqlstt(DRDA *drda, char *sql)
 {
-char *buf;
-int sql_len;
+    unsigned char *buf;
+    int sql_len;
 
 	sql_len = strlen(sql);
 	buf = &drda->out_buf[drda->out_pos];
@@ -434,7 +414,7 @@ int sql_len;
 
 int ddm_write_rdbcmm(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -448,7 +428,7 @@ char *buf;
 
 int ddm_write_bgnbnd(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -462,7 +442,7 @@ char *buf;
 
 int ddm_write_endbnd(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -476,7 +456,7 @@ char *buf;
 
 int ddm_write_pkgnamct(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -484,13 +464,13 @@ char *buf;
 	drda_put_int2(&buf[2], DDM_PKGNAMCT); 
 
 	/* rdbnam */
-	drda_local_string2remote_pad(drda, drda->database, 18, &buf[4]);
+	drda_local_string2remote_pad(drda, drda->database, 18, (char*)&buf[4]);
 
 	/* rdbcolid */
-	drda_local_string2remote_pad(drda, drda->collection, 18, &buf[22]);
+	drda_local_string2remote_pad(drda, drda->collection, 18, (char*)&buf[22]);
 	
 	/* pkgid */
-	drda_local_string2remote_pad(drda, drda->package, 18, &buf[40]);
+	drda_local_string2remote_pad(drda, drda->package, 18, (char*)&buf[40]);
 	
 	/* pkgcstkn */
 	memcpy(&buf[58],"OD000001",8);
@@ -502,7 +482,7 @@ char *buf;
 
 int ddm_write_pkgisolvl(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -517,7 +497,7 @@ char *buf;
 
 int ddm_write_prpsqlstt(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -530,7 +510,7 @@ char *buf;
 
 int ddm_write_excsqlstt(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -543,7 +523,7 @@ char *buf;
 
 int ddm_write_opnqry(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -553,9 +533,10 @@ char *buf;
 
 	return 4;
 }
+
 int ddm_write_cntqry(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -568,7 +549,7 @@ char *buf;
 
 int ddm_write_qryblksz(DRDA *drda, int sz)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -582,7 +563,7 @@ char *buf;
 
 int ddm_write_rtnsqlda(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
