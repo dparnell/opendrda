@@ -212,8 +212,8 @@ int  drda_endbnd              (DRDA *drda);
 int  drda_prpsqlstt           (DRDA *drda, char *sql);
 
 /*   ... fdoca.c */
-int  fdoca_read_sqlca         (DRDA *drda, char *buf);
-int  fdoca_read_sqlda         (DRDA *drda, char *buf);
+int  fdoca_read_sqlca         (DRDA *drda, unsigned char *buf);
+int  fdoca_read_sqlda         (DRDA *drda, unsigned char *buf);
 
 /*   ... handle.c */
 DRDA *drda_init               ();

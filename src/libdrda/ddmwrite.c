@@ -162,9 +162,10 @@ char *buf;
 
 	return 6;
 }
+
 int ddm_write_secchk(DRDA *drda)
 {
-char *buf;
+    unsigned char *buf;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -174,6 +175,7 @@ char *buf;
 
 	return 4;
 }
+
 int ddm_write_accrdb(DRDA *drda)
 {
 char *buf;

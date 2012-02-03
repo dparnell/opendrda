@@ -36,7 +36,7 @@ int fdoca_sizeof_length(int type)
 	}
 }
 
-int fdoca_read_sqlca(DRDA *drda, char *buf)
+int fdoca_read_sqlca(DRDA *drda, unsigned char *buf)
 {
 DRDA_SQLCA *sqlca;
 
@@ -73,12 +73,12 @@ DRDA_SQLCA *sqlca;
 	return 76;
 }
 
-int fdoca_read_sqlda(DRDA *drda, char *buf)
+int fdoca_read_sqlda(DRDA *drda, unsigned char *buf)
 {
-DRDA_SQLDA *sqlda;
-int num_cols;
-int pos, i;
-int str_len;
+    DRDA_SQLDA *sqlda;
+    int num_cols;
+    int pos, i;
+    int str_len;
 
 	sqlda = drda_alloc_sqlda(drda);
 	/* This is in servers machine order ?! */

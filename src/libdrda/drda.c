@@ -17,15 +17,15 @@
 */
 int drda_excsat(DRDA *drda)
 {
-int len;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-int excsat_len = 0;
-int excsat_len_pos;
-int mgrlvlls_len = 0;
-int mgrlvlls_len_pos;
-char *buf;
-char c[256];
+    int len;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    int excsat_len = 0;
+    int excsat_len_pos;
+    int mgrlvlls_len = 0;
+    int mgrlvlls_len_pos;
+    unsigned char *buf;
+    char c[256];
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -66,17 +66,18 @@ char c[256];
 
 	return len;
 }
+
 /*
 * Negotiate the security mechanism
 */
 int drda_accsec(DRDA *drda)
 {
-int len;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-int accsec_len = 0;
-int accsec_len_pos;
-char *buf;
+    int len;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    int accsec_len = 0;
+    int accsec_len_pos;
+    unsigned char *buf;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -87,7 +88,7 @@ char *buf;
 	accsec_len_pos = drda->out_pos;
 	accsec_len = ddm_write_accsec(drda);
 	// accsec_len += ddm_write_secmgrnm(drda,NULL);
-	accsec_len += ddm_write_secmec(drda,3); /* 3: userid and passwd */
+	accsec_len += ddm_write_secmec(drda, 3); /* 3: userid and passwd */
 	rqsdss_len += accsec_len;
 
 	drda_put_int2(&drda->out_buf[accsec_len_pos], accsec_len);
@@ -99,17 +100,18 @@ char *buf;
 
 	return len;
 }
+
 /*
 * Send login information
 */
 int drda_secchk(DRDA *drda)
 {
-int len;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-int secchk_len = 0;
-int secchk_len_pos;
-char *buf;
+    int len;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    int secchk_len = 0;
+    int secchk_len_pos;
+    unsigned char *buf;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -119,10 +121,10 @@ char *buf;
 
 	secchk_len_pos = drda->out_pos;
 	secchk_len = ddm_write_secchk(drda);
-	secchk_len += ddm_write_secmec(drda,3); /* 3: userid and passwd */
-	secchk_len += ddm_write_usrid(drda,drda->usrid); 
-	secchk_len += ddm_write_password(drda,drda->passwd);
-	secchk_len += ddm_write_rdbnam(drda,drda->database); 
+	secchk_len += ddm_write_secmec(drda, 3); /* 3: userid and passwd */
+	secchk_len += ddm_write_rdbnam(drda, drda->database);     
+	secchk_len += ddm_write_usrid(drda, drda->usrid); 
+	secchk_len += ddm_write_password(drda, drda->passwd);
 	rqsdss_len += secchk_len;
 
 	drda_put_int2(&drda->out_buf[secchk_len_pos], secchk_len);
@@ -396,20 +398,21 @@ DRDA_COLUMN *col;
 
 	return len;
 }
+
 /*
 * Continue a SQL query 
 */
 int drda_cntqry(DRDA *drda)
 {
-int len, read_len;
-int tot_len = 0;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-int cntqry_len = 0;
-int cntqry_len_pos;
-char *buf;
-/* move this somewhere else */
-DRDA_COLUMN *col;
+    int len, read_len;
+    int tot_len = 0;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    int cntqry_len = 0;
+    int cntqry_len_pos;
+    unsigned char *buf;
+    /* move this somewhere else */
+    DRDA_COLUMN *col;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -433,9 +436,10 @@ DRDA_COLUMN *col;
 
 	return len;
 }
+
 static int chain_read(DRDA *drda, unsigned char *buf)
 {
-int len, dss_len;
+    int len, dss_len;
 
 	len = 0;
 	while (1) {
