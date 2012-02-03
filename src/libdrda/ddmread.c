@@ -220,7 +220,7 @@ char *cpname="SRVDGN";
 	drda_log(0,stderr, "Len of message: %d\n", len);
 
 	tmpstr = (char *) malloc(len - 3);
-	drda_ebcdic2ascii(&buf[4], len - 4, tmpstr);
+	drda_remote_string2local(drda, &buf[4], len - 4, tmpstr);
 	drda_log(0,stderr, "Message: %s\n", tmpstr);
 	if (drda->err_diag_msg) {
 		free(drda->err_diag_msg);
@@ -439,7 +439,7 @@ char *cpname = "EXTNAM";
 	}
 
 	tmpstr = (char *) malloc(len - 3);
-	drda_ebcdic2ascii(&buf[4], len - 4, tmpstr);
+	drda_local_string2remote(drda, &buf[4], len - 4, tmpstr);
 
 	if (drda->sat_extnam) { free(drda->sat_extnam); }
 	drda->sat_extnam = strdup(tmpstr);
@@ -466,7 +466,7 @@ char *cpname = "SRVCLSNM";
 	}
 
 	tmpstr = (char *) malloc(len - 3);
-	drda_ebcdic2ascii(&buf[4], len - 4, tmpstr);
+	drda_local_string2remote(drda, &buf[4], len - 4, tmpstr);
 
 	if (drda->sat_srvclsnm) { free(drda->sat_srvclsnm); }
 	drda->sat_srvclsnm = strdup(tmpstr);
@@ -492,7 +492,7 @@ char *cpname = "SRVNAM";
 	}
 
 	tmpstr = (char *) malloc(len - 3);
-	drda_ebcdic2ascii(&buf[4], len - 4, tmpstr);
+	drda_local_string2remote(drda, &buf[4], len - 4, tmpstr);
 
 	if (drda->sat_srvnam) { free(drda->sat_srvnam); }
 	drda->sat_srvnam = strdup(tmpstr);
@@ -518,7 +518,7 @@ char *cpname = "SRVRLSLV";
 	}
 
 	tmpstr = (char *) malloc(len - 3);
-	drda_ebcdic2ascii(&buf[4], len - 4, tmpstr);
+	drda_local_string2remote(drda, &buf[4], len - 4, tmpstr);
 
 	if (drda->sat_srvrlslv) { free(drda->sat_srvrlslv); }
 	drda->sat_srvrlslv = strdup(tmpstr);
@@ -632,7 +632,7 @@ char *tmpstr;
 	}
 
 	tmpstr = (char *) malloc(9);
-	drda_ebcdic2ascii(&buf[4], 8, tmpstr);
+	drda_local_string2remote(drda, &buf[4], 8, tmpstr);
 	drda_log(0,stderr, "%s object\n",cpname);
 	drda_log(0,stderr, "Len of message: %d\n", len);
 	drda_log(0,stderr, "prdid: %s\n", tmpstr);
@@ -653,7 +653,7 @@ char *tmpstr;
 	}
 
 	tmpstr = (char *) malloc(len - 4);
-	drda_ebcdic2ascii(&buf[4], len - 4, tmpstr);
+	drda_local_string2remote(drda, &buf[4], len - 4, tmpstr);
 	drda->typdefnam = strdup(tmpstr);
 	drda_log(0,stderr, "%s object\n",cpname);
 	drda_log(0,stderr, "Len of message: %d\n", len);

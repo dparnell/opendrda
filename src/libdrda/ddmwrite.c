@@ -85,10 +85,10 @@ char *buf;
 }
 int ddm_write_srvclsnm(DRDA *drda)
 {
-char *buf;
-char *libname = "QAS";
-int  name_len = strlen(libname);
-char *tmpstr;
+    unsigned char *buf;
+    char *libname = "QAS";
+    int  name_len = strlen(libname);
+    char *tmpstr;
 
 	buf = &drda->out_buf[drda->out_pos];
 
@@ -97,7 +97,7 @@ char *tmpstr;
 	drda_put_int2(&buf[4], name_len + 4); 
 	drda_put_int2(&buf[6], DDM_CHRSTRDR); 
      tmpstr = (char *) malloc(name_len + 1);
-	drda_ascii2ebcdic(&buf[4], name_len, tmpstr);
+	drda_local_string2remote(drda, (char*)&buf[4], name_len, tmpstr);
 	memcpy(&buf[8],libname, name_len);
 	free(tmpstr);
 	drda->out_pos += name_len + 8;
@@ -200,7 +200,7 @@ char usrid[11];
 	drda_put_int2(buf, username_len + 4); 
 	drda_put_int2(&buf[2], DDM_USRID); 
      tmpstr = (char *) malloc(username_len + 1);
-     drda_ascii2ebcdic(username, username_len, tmpstr);
+     drda_local_string2remote(drda, username, username_len, tmpstr);
 	memcpy(&buf[4],tmpstr,username_len);
      free(tmpstr);
 	drda->out_pos += 4 + username_len;
@@ -213,7 +213,7 @@ char usrid[11];
 	drda_put_int2(&buf[2], DDM_USRID); 
      tmpstr = (char *) malloc(11);
 	memset(tmpstr,0,11);
-     drda_ascii2ebcdic(usrid, 10, tmpstr);
+     drda_local_string2remote(usrid, 10, tmpstr);
 	memcpy(&buf[4],tmpstr,10);
      free(tmpstr);
 	drda->out_pos += 14;
@@ -234,7 +234,7 @@ char passwd[11];
 	drda_put_int2(buf, password_len + 4); 
 	drda_put_int2(&buf[2], DDM_PASSWORD); 
      tmpstr = (char *) malloc(password_len + 1);
-     drda_ascii2ebcdic(password, password_len, tmpstr);
+     drda_local_string2remote(drda, password, password_len, tmpstr);
 	memcpy(&buf[4],tmpstr,password_len);
      free(tmpstr);
 	drda->out_pos += 4 + password_len;
@@ -247,7 +247,7 @@ char passwd[11];
 	drda_put_int2(&buf[2], DDM_PASSWORD); 
      tmpstr = (char *) malloc(11);
 	memset(tmpstr,0,11);
-     drda_ascii2ebcdic(passwd, 10, tmpstr);
+     drda_local_string2remote(passwd, 10, tmpstr);
 	memcpy(&buf[4],tmpstr,10);
      free(tmpstr);
 	drda->out_pos += 14;
@@ -264,7 +264,7 @@ char *buf;
 	drda_put_int2(buf, 22); 
 	drda_put_int2(&buf[2], DDM_RDBNAM); 
 
-     drda_ascii2ebcdic_pad(database, 18, &buf[4]);
+     drda_local_string2remote_pad(drda, database, 18, &buf[4]);
 
 	drda->out_pos += 22;
 
@@ -313,7 +313,7 @@ char *buf;
 
 	drda_put_int2(buf, 12); 
 	drda_put_int2(&buf[2], DDM_PRDID); 
-	drda_ascii2ebcdic_pad(DRDA_PRDID, 8, &buf[4]);
+	drda_local_string2remote_pad(drda, DRDA_PRDID, 8, &buf[4]);
 
 	drda->out_pos += 12;
 
@@ -328,7 +328,7 @@ char *buf;
 	drda_put_int2(buf, 23); 
 	drda_put_int2(&buf[2], DDM_CRRTKN);
 	/* DRDA_PRDID (in drda.h) must be exactly 8 chars or this goes to hell */
-	drda_ascii2ebcdic(drda->crrtkn, 19, &buf[4]);
+	drda_local_string2remote(drda, drda->crrtkn, 19, &buf[4]);
 
 	drda->out_pos += 23;
 
@@ -389,13 +389,13 @@ char *buf;
 	drda_put_int2(&buf[2], DDM_PKGNAMCSN); 
 
 	/* rdbnam */
-	drda_ascii2ebcdic_pad(drda->database, 18, &buf[4]);
+	drda_local_string2remote_pad(drda, drda->database, 18, &buf[4]);
 
 	/* rdbcolid */
-	drda_ascii2ebcdic_pad(drda->collection, 18, &buf[22]);
+	drda_local_string2remote_pad(drda, drda->collection, 18, &buf[22]);
 	
 	/* pkgid */
-	drda_ascii2ebcdic_pad(drda->package, 18, &buf[40]);
+	drda_local_string2remote_pad(drda, drda->package, 18, &buf[40]);
 	
 	/* pkgcstkn */
 	//memset(&buf[58],0x40,8);
@@ -422,7 +422,7 @@ int sql_len;
 
 	drda_put_int2(&buf[4], 0); 
 	drda_put_int2(&buf[6], sql_len); 
-	//drda_ascii2ebcdic(sql, sql_len, &buf[8]);
+	//drda_local_string2remote(sql, sql_len, &buf[8]);
 	memcpy(&buf[8],sql,sql_len);
 
 	drda->out_pos += sql_len + 8;
@@ -482,13 +482,13 @@ char *buf;
 	drda_put_int2(&buf[2], DDM_PKGNAMCT); 
 
 	/* rdbnam */
-	drda_ascii2ebcdic_pad(drda->database, 18, &buf[4]);
+	drda_local_string2remote_pad(drda, drda->database, 18, &buf[4]);
 
 	/* rdbcolid */
-	drda_ascii2ebcdic_pad(drda->collection, 18, &buf[22]);
+	drda_local_string2remote_pad(drda, drda->collection, 18, &buf[22]);
 	
 	/* pkgid */
-	drda_ascii2ebcdic_pad(drda->package, 18, &buf[40]);
+	drda_local_string2remote_pad(drda, drda->package, 18, &buf[40]);
 	
 	/* pkgcstkn */
 	memcpy(&buf[58],"OD000001",8);

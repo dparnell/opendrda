@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include <time.h>
 
-#define DRDALOG 0
+#define DRDALOG 1
 
 void drda_dump_buf(
    FILE 	 *dumpfile, 

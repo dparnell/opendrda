@@ -84,8 +84,11 @@ typedef struct _drda_sqlda {
 
 typedef struct _drda {
 	int  s;             /* connection to server */
-	char out_buf[4096]; /* FIX ME */
+    char*   local_encoding;
+    char*   remote_encoding;
+	unsigned char* out_buf;
 	int  out_pos;
+    int  out_size;
 	/* error handling */
 	int  err_set;
 	int  severity_code;
@@ -230,8 +233,10 @@ void drda_set_database        (DRDA *drda, char *database);
 void drda_set_user            (DRDA *drda, char *user);
 void drda_set_password        (DRDA *drda, char *password);
 void drda_set_port            (DRDA *drda, unsigned short port);
-int drda_set_by_url           (DRDA *drda, char *url);
+int drda_set_by_url           (DRDA *drda, const char *url);
 int drda_set_by_keyvalue      (DRDA *drda, char *k);
+void drda_set_local_encoding  (DRDA *drda, char *encoding);
+void drda_set_remote_encoding (DRDA *drda, char *encoding);
 
 /*   ... util.c */
 void drda_buffer_init         (DRDA *drda);
@@ -240,9 +245,9 @@ DRDA_INT4 drda_get_int4       (unsigned char *buf);
 DRDA_INT2 drda_get_leint2     (unsigned char *buf);
 DRDA_INT4 drda_get_leint4     (unsigned char *buf);
 void drda_put_int2            (unsigned char *buf, DRDA_INT2 val);
-char *drda_ebcdic2ascii       (char *in_buf, int in_bytes,  char *out_buf);
-char *drda_ascii2ebcdic       (char *in_buf, int in_bytes,  char *out_buf);
-void drda_ascii2ebcdic_pad    (char *in_buf, int out_bytes, char *out_buf);
+char *drda_remote_string2local       (DRDA *drda, char *in_buf, size_t in_bytes,  char *out_buf);
+char *drda_local_string2remote       (DRDA *drda, char *in_buf, size_t in_bytes,  char *out_buf);
+void drda_local_string2remote_pad    (DRDA *drda, char *in_buf, size_t out_bytes, char *out_buf);
 
 #ifdef __cplusplus
 }

@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 /*
 ** All manner of routines dealing with the DRDA struct and sub structs.
@@ -20,19 +21,20 @@ DRDA *drda;
 	memset(drda, 0, sizeof(DRDA));
 	drda->collection = strdup("NULLID");
 	drda->package = strdup("OPENDRDA");
-
+    drda->local_encoding = strdup("UTF-8");
+    drda->remote_encoding = strdup("UTF-8");
 	return drda;
 }
 
 int drda_connect(DRDA *drda)
 {
-struct sockaddr_in      sin;
-int     fd;
-struct sockaddr_in name;
-int len = sizeof(struct sockaddr_in);
-time_t t;
-struct hostent   *host;
-char ip[100];
+    struct sockaddr_in      sin;
+    int     fd;
+    struct sockaddr_in name;
+    int len = sizeof(struct sockaddr_in);
+    time_t t;
+    struct hostent   *host;
+    char ip[100];
 
 	host = gethostbyname(drda->server);
 	if (host) {
@@ -50,7 +52,7 @@ char ip[100];
 
 	if ((fd = socket (AF_INET, SOCK_STREAM, 0)) < 0) {
 		perror ("socket");
-		exit(1);
+		return 0;
 	}
 
 	/* begin tenger@idirect.com 8/6/2001 */
@@ -71,7 +73,7 @@ char ip[100];
 			&optval, sizeof(optval));
 		if (rc<0) {
 			perror("setsockopt,SO_KEEPALIVE");
-			exit(1);
+			return 0;
 		}
 
 		optlinger.l_onoff  = 1;
@@ -80,7 +82,7 @@ char ip[100];
 			&optlinger, sizeof(optlinger));
 		if (rc<0) {
 			perror("setsockopt,SO_LINGER");
-			exit(1);
+			return 0;
 		}
 	}
 
@@ -88,8 +90,8 @@ char ip[100];
 
 
 	if (connect(fd, (struct sockaddr *) &sin, sizeof(sin)) <0) {
-    		perror("connect");
-    		exit(1);
+        perror("connect");
+        return 0;
      }
 
 
@@ -116,6 +118,9 @@ void drda_disconnect(DRDA *drda)
 void drda_release(DRDA *drda)
 {
 	drda_clear_error(drda);
+    if (drda->out_buf) { free(drda->out_buf); }
+    if (drda->remote_encoding) { free(drda->remote_encoding); }
+    if (drda->local_encoding) { free(drda->local_encoding); }
 	if (drda->sat_extnam) { free(drda->sat_extnam); }
 	if (drda->sat_srvclsnm) { free(drda->sat_srvclsnm); }
 	if (drda->sat_srvnam) { free(drda->sat_srvnam); }
