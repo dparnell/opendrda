@@ -5,6 +5,10 @@
 #include "drda.h"
 #include <sys/socket.h>
 
+int ddm_write_opnqry(DRDA *drda);
+int ddm_write_qryblksz(DRDA *drda, int sz);
+int ddm_write_cntqry(DRDA *drda);
+
 /*
 ** This file contains the basic framing of the protocol messages, the protocol
 ** data units themselves are DDM objects and are in ddmwrite.c or ddmread.c
@@ -142,12 +146,12 @@ int drda_secchk(DRDA *drda)
 */
 int drda_accrdb(DRDA *drda)
 {
-int len;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-int accrdb_len = 0;
-int accrdb_len_pos;
-char *buf;
+    int len;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    int accrdb_len = 0;
+    int accrdb_len_pos;
+    unsigned char *buf;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -180,13 +184,13 @@ char *buf;
 */
 int drda_excsqlimm(DRDA *drda, char *sql)
 {
-int len;
-int tot_len = 0;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-int excsqlimm_len = 0;
-int excsqlimm_len_pos;
-char *buf;
+    int len;
+    int tot_len = 0;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    int excsqlimm_len = 0;
+    int excsqlimm_len_pos;
+    unsigned char *buf;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -224,10 +228,10 @@ char *buf;
 */
 int drda_rdbcmm(DRDA *drda)
 {
-int len;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-char *buf;
+    int len;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    unsigned char *buf;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -251,12 +255,12 @@ char *buf;
 */
 int drda_bgnbnd(DRDA *drda)
 {
-int len;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-int bgnbnd_len = 0;
-int bgnbnd_len_pos;
-char *buf;
+    int len;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    int bgnbnd_len = 0;
+    int bgnbnd_len_pos;
+    unsigned char *buf;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -284,12 +288,12 @@ char *buf;
 }
 int drda_endbnd(DRDA *drda)
 {
-int len;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-int endbnd_len = 0;
-int endbnd_len_pos;
-char *buf;
+    int len;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    int endbnd_len = 0;
+    int endbnd_len_pos;
+    unsigned char *buf;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -318,13 +322,12 @@ char *buf;
 */
 int drda_prpsqlstt(DRDA *drda, char *sql)
 {
-int len = 0;
-int tot_len = 0;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-int prpsqlstt_len = 0;
-int prpsqlstt_len_pos;
-char *buf;
+    int tot_len = 0;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    int prpsqlstt_len = 0;
+    int prpsqlstt_len_pos;
+    unsigned char *buf;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -365,15 +368,16 @@ char *buf;
 */
 int drda_opnqry(DRDA *drda)
 {
-int len, read_len;
-int tot_len = 0;
-int rqsdss_len = 0;
-int rqsdss_len_pos;
-int opnqry_len = 0;
-int opnqry_len_pos;
-char *buf;
-/* move this somewhere else */
-DRDA_COLUMN *col;
+    int len;
+//    int read_len;
+//    int tot_len = 0;
+    int rqsdss_len = 0;
+    int rqsdss_len_pos;
+    int opnqry_len = 0;
+    int opnqry_len_pos;
+    unsigned char *buf;
+    /* move this somewhere else */
+//    DRDA_COLUMN *col;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;
@@ -404,15 +408,16 @@ DRDA_COLUMN *col;
 */
 int drda_cntqry(DRDA *drda)
 {
-    int len, read_len;
-    int tot_len = 0;
+    int len;
+//    int read_len;
+//    int tot_len = 0;
     int rqsdss_len = 0;
     int rqsdss_len_pos;
     int cntqry_len = 0;
     int cntqry_len_pos;
     unsigned char *buf;
     /* move this somewhere else */
-    DRDA_COLUMN *col;
+//    DRDA_COLUMN *col;
 
 	drda_buffer_init(drda);
 	rqsdss_len_pos = drda->out_pos;

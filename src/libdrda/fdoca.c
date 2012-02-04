@@ -4,6 +4,12 @@
 
 #include "drda.h"
 #include <stdlib.h>
+#include <string.h>
+
+int drda_convert_precision(DRDA *drda, unsigned char *src, int srctype, 
+                           int srcprec, int srcscale,
+                           unsigned char *dest, int desttype, 
+                           int destlen);
 
 int fdoca_is_nullable(int type)
 {
@@ -162,7 +168,6 @@ int fdoca_read_sqlda(DRDA *drda, unsigned char *buf)
 int fdoca_read_qrydsc(DRDA *drda, char *buf)
 {
 DRDA_SQLDA *sqlda;
-int num_cols;
 int coln;
 DRDA_COLUMN *col;
 int len, start;
@@ -188,11 +193,13 @@ int len, start;
 		start += 3;
 		coln++;
 	}
+    
+    return 0;
 }
 
 int fdoca_read_qrydta(DRDA *drda, unsigned char *buf, int len)
 {
-DRDA_SQLDA *sqlda;
+//DRDA_SQLDA *sqlda;
 int pos;
 
 	pos = 0;
@@ -213,11 +220,11 @@ int fdoca_read_qrydta_row(DRDA *drda, unsigned char *buf, int len, int start)
 {
 int pos = start;
 DRDA_SQLDA *sqlda;
-int num_cols;
+// int num_cols;
 int coln, dlen;
 DRDA_COLUMN *col;
 int szbytes, flen;
-unsigned char *tmpbuf;
+// unsigned char *tmpbuf;
 
 	sqlda = drda->sqlda;
 
@@ -266,7 +273,7 @@ unsigned char *tmpbuf;
 			}
 		} else {
 			fprintf(stderr,"code does not yet support length size of %d!\n",flen);
-			return;
+			return -1;
 		}
 		pos += szbytes;
 		// fprintf(stderr,"flen = %d\n", col->fdoca_len);

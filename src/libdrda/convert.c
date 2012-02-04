@@ -8,6 +8,7 @@
 */
 #include "drda.h"
 #include <stdlib.h>
+#include <string.h>
 
 static int drda_convert_char(DRDA *drda, 
 					unsigned char *src, int srctype, int srclen,
@@ -80,38 +81,35 @@ drda_set_null_value(DRDA *drda, unsigned char *dest, int desttype)
 	}
 	return 0;
 }
+
 int drda_convert(DRDA *drda, unsigned char *src, int srctype, int srclen, 
 					unsigned char *dest, int desttype, int destlen)
 {
 	//fprintf(stderr, "Converting from %d to %d\n", srctype, desttype);
 	switch (srctype) {
 		case DRDA_TIME:
-			return drda_convert_char(drda, src, srctype, 8, 
-				dest, desttype, destlen);
+			return drda_convert_char(drda, src, srctype, 8, dest, desttype, destlen);
 		case DRDA_DATE:
-			return drda_convert_char(drda, src, srctype, 10, 
-				dest, desttype, destlen);
+			return drda_convert_char(drda, src, srctype, 10, dest, desttype, destlen);
 		case DRDA_CHAR:
 		case DRDA_VARCHAR:
-			return drda_convert_char(drda, src, srctype, srclen, 
-				dest, desttype, destlen);
-		break;
+			return drda_convert_char(drda, src, srctype, srclen, dest, desttype, destlen);
 		case DRDA_SMALLINT:
-			return drda_convert_smallint(drda, src, srctype, srclen, 
-				dest, desttype, destlen);
+			return drda_convert_smallint(drda, src, srctype, srclen, dest, desttype, destlen);
 		case DRDA_INT:
-			return drda_convert_int(drda, src, srctype, srclen, 
-				dest, desttype, destlen);
-		break;
+			return drda_convert_int(drda, src, srctype, srclen, dest, desttype, destlen);
 	}
+    
+    return -1;
 }
+
 int drda_convert_precision(DRDA *drda, unsigned char *src, int srctype, 
 					int srcprec, int srcscale,
 					unsigned char *dest, int desttype, 
 					int destlen)
 {
-int i, j;
-unsigned char *buf;
+    int i, j;
+    unsigned char *buf;
 
 	switch (desttype) {
 		case DRDA_CHAR:
@@ -128,13 +126,14 @@ unsigned char *buf;
 			buf[srcprec+1]='\0';
 			/* clean off the zeros */
 			for (j=0;buf[j]=='0';j++);
-			strncpy(dest, &buf[j], destlen);
+			strncpy((char*)dest, (char*)&buf[j], destlen);
 			dest[destlen]='\0';
 			free(buf);
 		break;
 	}
-	return strlen(dest);
+	return strlen((char*)dest);
 }
+
 static int drda_convert_char(DRDA *drda, 
 	unsigned char *src, int srctype, int srclen, 
 	unsigned char *dest, int desttype, int destlen)
@@ -142,26 +141,26 @@ static int drda_convert_char(DRDA *drda,
 	switch (desttype) {
 		case DRDA_CHAR:
 		case DRDA_VARCHAR:
-			strncpy(dest, src, destlen);
+			strncpy((char*)dest, (char*)src, destlen);
 			dest[destlen]='\0';
 		break;
 	}
-	return strlen(dest);
+	return strlen((char*)dest);
 }
 static int drda_convert_smallint(DRDA *drda, 
 	unsigned char *src, int srctype, int srclen, 
 	unsigned char *dest, int desttype, int destlen)
 {
-DRDA_INT2 val;
+    DRDA_INT2 val;
 
 	val = drda_get_endian_int2(drda, src);
 
 	switch(desttype) {
 		case DRDA_CHAR:
 		case DRDA_VARCHAR:
-			sprintf(dest, "%d", val); 
+			sprintf((char*)dest, "%d", val); 
 			// fprintf(stderr, "Converted %d %s\n", val, dest);
-			return strlen(dest);
+			return strlen((char*)dest);
 		break;
 	}
 	return 0;
@@ -170,16 +169,16 @@ static int drda_convert_int(DRDA *drda,
 	unsigned char *src, int srctype, int srclen, 
 	unsigned char *dest, int desttype, int destlen)
 {
-DRDA_INT4 val;
+    DRDA_INT4 val;
 
 	val = drda_get_endian_int2(drda, src);
 
 	switch(desttype) {
 		case DRDA_CHAR:
 		case DRDA_VARCHAR:
-			sprintf(dest, "%ld", val); 
+			sprintf((char*)dest, "%ld", val); 
 			// fprintf(stderr, "Converted %d %s\n", val, dest);
-			return strlen(dest);
+			return strlen((char*)dest);
 		break;
 	}
 	return 0;

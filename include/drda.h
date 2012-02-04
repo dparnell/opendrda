@@ -246,11 +246,15 @@ DRDA_INT2 drda_get_leint2     (unsigned char *buf);
 DRDA_INT4 drda_get_leint4     (unsigned char *buf);
 void drda_put_int2            (unsigned char *buf, DRDA_INT2 val);
 void drda_put_int4(unsigned char *buf, DRDA_INT2 val);
+DRDA_INT2 drda_get_endian_int2(DRDA *drda, unsigned char *buf);
+DRDA_INT4 drda_get_endian_int4(DRDA *drda, unsigned char *buf);
 
 char *drda_remote_string2local       (DRDA *drda, char *in_buf, size_t in_bytes,  char *out_buf);
 char *drda_local_string2remote       (DRDA *drda, char *in_buf, size_t in_bytes,  char *out_buf);
 void drda_local_string2remote_pad    (DRDA *drda, char *in_buf, size_t out_bytes, char *out_buf);
 
+void drda_log(int debug_lvl, FILE *dumpfile, const char *fmt, ...);
+    
 #ifdef __cplusplus
 }
 #endif

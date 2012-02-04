@@ -31,7 +31,7 @@ int drda_connect(DRDA *drda)
     struct sockaddr_in      sin;
     int     fd;
     struct sockaddr_in name;
-    int len = sizeof(struct sockaddr_in);
+    socklen_t len = sizeof(struct sockaddr_in);
     time_t t;
     struct hostent   *host;
     char ip[100];
@@ -97,7 +97,7 @@ int drda_connect(DRDA *drda)
 
 
 	drda->s = fd;
-     if (getsockname(drda->s, &name, &len)>=0) {
+     if (getsockname(drda->s, (struct sockaddr*)&name, &len)>=0) {
 		sprintf(drda->crrtkn, "%08x\n",htonl(*((unsigned long *) &name.sin_addr)));
 		drda->crrtkn[8]='.';
 		sprintf(&(drda->crrtkn[9]), "%04x\n",(unsigned int)name.sin_port);

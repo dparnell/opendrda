@@ -6,7 +6,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-void drda_log(int debug_lvl, FILE *dumpfile, const char *fmt, ...);
 int ddm_read_qryprctyp(DRDA *drda, unsigned char *buf);
 int ddm_read_sqlcsrhld(DRDA *drda, unsigned char *buf);
 int fdoca_read_qrydsc(DRDA *drda, char *buf);
