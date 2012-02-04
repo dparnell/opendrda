@@ -22,7 +22,7 @@ DRDA *drda;
 	drda->collection = strdup("NULLID");
 	drda->package = strdup("OPENDRDA");
     drda->local_encoding = strdup("UTF-8");
-    drda->remote_encoding = strdup("UTF-8");
+    drda->remote_encoding = strdup("EBCDIC");
 	return drda;
 }
 
