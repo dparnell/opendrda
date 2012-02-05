@@ -47,11 +47,11 @@ int drda_excsat(DRDA *drda)
 	mgrlvlls_len += ddm_write_mgrlvl(drda, DDM_SECMGR, 1);
 	mgrlvlls_len += ddm_write_mgrlvl(drda, DDM_CMNTCPIP, 5);
 	mgrlvlls_len += ddm_write_mgrlvl(drda, DDM_SQLAM, 4);
-	mgrlvlls_len += ddm_write_mgrlvl(drda, DDM_CCSIDMGR, 850);
+//	mgrlvlls_len += ddm_write_mgrlvl(drda, DDM_CCSIDMGR, 850);
 	mgrlvlls_len += ddm_write_mgrlvl(drda, DDM_RDB, 5);
 	drda_put_int2(&drda->out_buf[mgrlvlls_len_pos], mgrlvlls_len);
 	excsat_len += mgrlvlls_len;
-
+    
 	excsat_len += ddm_write_srvclsnm(drda);
 	/* tje, begin insertion, 2001-07-20 */
 	gethostname (c, sizeof(c));

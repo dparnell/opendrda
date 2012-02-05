@@ -38,21 +38,31 @@ int ddm_write_extnam(DRDA *drda)
 {
     unsigned char *buf;
     char pid[10];
-    int  pid_sz;
-
+    int  size;
+    char *name;
+    unsigned char *tmpstr;
+    
 	buf = &drda->out_buf[drda->out_pos];
 
-	sprintf(pid, "%d", getpid());
-	pid_sz = strlen(pid);
+    if(drda->application_name) {
+        name = drda->application_name;
+    } else {    
+        sprintf(pid, "%d", getpid());
+        name = &pid[0];
+    }
+    size = strlen(name);
 
-	drda_put_int2(buf, pid_sz + 4); 
+	drda_put_int2(buf, size + 4); 
 	drda_put_int2(&buf[2], DDM_EXTNAM); 
 	//drda_put_int2(&buf[4], pid_sz + 4); 
 	//drda_put_int2(&buf[6], DDM_CHRSTRDR); 
-	memcpy(&buf[4],pid, pid_sz);
-	drda->out_pos += pid_sz + 4;
+    tmpstr = (unsigned char *) malloc(size + 1);
+    drda_local_string2remote(drda, name, size, (char*)tmpstr);
+	memcpy(&buf[4],tmpstr,size);
+    free(tmpstr);
+	drda->out_pos += size + 4;
 
-	return pid_sz + 4;
+	return size + 4;
 }
 
 int ddm_write_mgrlvlls(DRDA *drda)
@@ -89,7 +99,7 @@ int ddm_write_mgrlvl(DRDA *drda, int codept, int level)
 int ddm_write_srvclsnm(DRDA *drda)
 {
     unsigned char *buf;
-    char *libname = "QAS";
+    char *libname = "OpenDRDA";
     int  name_len = strlen(libname);
     char *tmpstr;
 
@@ -99,9 +109,9 @@ int ddm_write_srvclsnm(DRDA *drda)
 	drda_put_int2(&buf[2], DDM_SRVCLSNM); 
 	drda_put_int2(&buf[4], name_len + 4); 
 	drda_put_int2(&buf[6], DDM_CHRSTRDR); 
-     tmpstr = (char *) malloc(name_len + 1);
-	drda_local_string2remote(drda, (char*)&buf[4], name_len, tmpstr);
-	memcpy(&buf[8],libname, name_len);
+    tmpstr = (char *) malloc(name_len + 1);
+	drda_local_string2remote(drda, libname, name_len, tmpstr);
+	memcpy(&buf[8],tmpstr, name_len);
 	free(tmpstr);
 	drda->out_pos += name_len + 8;
 
@@ -112,12 +122,16 @@ int ddm_write_srvnam(DRDA *drda,char *servername)
 {
     unsigned char *buf;
     int  name_len = strlen(servername);
+    char *tmpstr;
 
 	buf = &drda->out_buf[drda->out_pos];
 
 	drda_put_int2(buf, name_len + 4); 
 	drda_put_int2(&buf[2], DDM_SRVNAM); 
-	memcpy(&buf[4],servername, name_len);
+    tmpstr = (char *) malloc(name_len + 1);
+	drda_local_string2remote(drda, servername, name_len, tmpstr);
+	memcpy(&buf[4],tmpstr, name_len);
+	free(tmpstr);
 	drda->out_pos += name_len + 4;
 
 	return name_len + 4;

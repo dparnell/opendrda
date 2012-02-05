@@ -120,6 +120,7 @@ typedef struct _drda {
 	char *passwd;
 	char *server;
 	unsigned short port;
+    char *application_name;
 	/* fdoca objects received from the server */
 	DRDA_SQLCA	*sqlca;
 	DRDA_SQLDA	*sqlda;
@@ -237,6 +238,7 @@ int drda_set_by_url           (DRDA *drda, const char *url);
 int drda_set_by_keyvalue      (DRDA *drda, char *k);
 void drda_set_local_encoding  (DRDA *drda, char *encoding);
 void drda_set_remote_encoding (DRDA *drda, char *encoding);
+void drda_set_application_name (DRDA *drda, char *application);
 
 /*   ... util.c */
 void drda_buffer_init         (DRDA *drda);

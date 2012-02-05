@@ -64,6 +64,11 @@ void drda_set_remote_encoding (DRDA *drda, char *encoding)
 	drda->remote_encoding = strdup(encoding);
 }
 
+void drda_set_application_name (DRDA *drda, char *application) {
+	if (drda->application_name) { free(drda->application_name); }
+	drda->application_name = strdup(application);
+}
+
 int drda_set_by_url(DRDA *drda, const char *url) 
 {
     char *tmp = strdup(url);
@@ -182,6 +187,8 @@ int klen = strlen(k) + 1;
 		drda_set_local_encoding(drda,v);
 	} else if (!strcmp(k, "remote-encoding")) {
 		drda_set_remote_encoding(drda,v);
+	} else if (!strcmp(k, "application-name")) {
+		drda_set_application_name(drda,v);
 	} else {
 		fprintf(stderr,"unrecognized option %s, skipping...\n",k);
 	}

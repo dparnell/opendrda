@@ -132,6 +132,8 @@ void drda_release(DRDA *drda)
 	if (drda->package) { free(drda->package); }
 	if (drda->server) { free(drda->server); }
 	if (drda->sqlca) { drda_free_sqlca(drda->sqlca); }
+    if (drda->application_name) { free(drda->application_name); }
+    
 	free(drda);
 }
 void drda_clear_error(DRDA *drda)
