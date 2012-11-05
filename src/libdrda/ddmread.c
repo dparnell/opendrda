@@ -140,7 +140,7 @@ int ddm_read_srvdgn(DRDA *drda, unsigned char *buf)
 	drda_log(0,stderr, "Len of message: %d\n", len);
 
 	tmpstr = (char *) malloc(len - 3);
-	drda_remote_string2local(drda, (char*)&buf[4], len - 4, tmpstr);
+	drda_remote_string2local(drda, &buf[4], len - 4, (unsigned char*)tmpstr);
 	drda_log(0,stderr, "Message: %s\n", tmpstr);
 	if (drda->err_diag_msg) {
 		free(drda->err_diag_msg);
@@ -235,16 +235,22 @@ char *cpname = "MGRLVLLS";
 		switch (codept) {
 			case DDM_AGENT:
 				drda->sat_agent = val;
+                break;
 			case DDM_SECMGR:
 				drda->sat_secmgr = val;
+                break;
 			case DDM_CMNTCPIP:
 				drda->sat_cmntcpip = val;
+                break;
 			case DDM_SQLAM:
 				drda->sat_sqlam = val;
+                break;
 			case DDM_CCSIDMGR:
 				drda->sat_ccsidmgr = val;
+                break;
 			case DDM_RDB:
 				drda->sat_rdb = val;
+                break;
 		}
 	}
 
@@ -352,7 +358,7 @@ int ddm_read_excsatrd(DRDA *drda, unsigned char *buf)
 int ddm_read_extnam(DRDA *drda, unsigned char *buf)
 {
     int len, codept;
-    char *tmpstr;
+    unsigned char *tmpstr;
     char *funcname = "ddm_read_extnam";
     char *cpname = "EXTNAM";
 
@@ -362,11 +368,16 @@ int ddm_read_extnam(DRDA *drda, unsigned char *buf)
 		return -1;
 	}
 
-	tmpstr = (char *) malloc(len - 3);
-	drda_local_string2remote(drda, (char*)&buf[4], len - 4, tmpstr);
+    if(len>12) {
+        // instance names are only allowed to be 8 characters long
+        len = 12;
+    }
+
+	tmpstr = (unsigned char *) malloc(len - 3);
+	drda_remote_string2local(drda, &buf[4], len - 4, tmpstr);
 
 	if (drda->sat_extnam) { free(drda->sat_extnam); }
-	drda->sat_extnam = strdup(tmpstr);
+	drda->sat_extnam = strdup((char*)tmpstr);
 
 	drda_log(0,stderr, "%s object\n",cpname);
 	drda_log(0,stderr, "Len of message: %d\n", len);
@@ -379,7 +390,7 @@ int ddm_read_extnam(DRDA *drda, unsigned char *buf)
 int ddm_read_srvclsnm(DRDA *drda, unsigned char *buf)
 {
     int len, codept;
-    char *tmpstr;
+    unsigned char *tmpstr;
     char *funcname = "ddm_read_srvclnm";
     char *cpname = "SRVCLSNM";
 
@@ -389,11 +400,11 @@ int ddm_read_srvclsnm(DRDA *drda, unsigned char *buf)
 		return -1;
 	}
 
-	tmpstr = (char *) malloc(len - 3);
-	drda_local_string2remote(drda, (char*)&buf[4], len - 4, tmpstr);
+	tmpstr = (unsigned char *) malloc(len - 3);
+	drda_remote_string2local(drda, &buf[4], len - 4, tmpstr);
 
 	if (drda->sat_srvclsnm) { free(drda->sat_srvclsnm); }
-	drda->sat_srvclsnm = strdup(tmpstr);
+	drda->sat_srvclsnm = strdup((char*)tmpstr);
 
 	drda_log(0,stderr, "%s object\n",cpname);
 	drda_log(0,stderr, "Len of message: %d\n", len);
@@ -416,8 +427,12 @@ int ddm_read_srvnam(DRDA *drda, unsigned char *buf)
 		return -1;
 	}
 
+    if(len>12) {
+        // server names can only be 8 characters long
+        len = 12;
+    }
 	tmpstr = (char *) malloc(len - 3);
-	drda_local_string2remote(drda, (char*)&buf[4], len - 4, tmpstr);
+	drda_remote_string2local(drda, &buf[4], len - 4, (unsigned char*)tmpstr);
 
 	if (drda->sat_srvnam) { free(drda->sat_srvnam); }
 	drda->sat_srvnam = strdup(tmpstr);
@@ -444,7 +459,7 @@ int ddm_read_srvrlslv(DRDA *drda, unsigned char *buf)
 	}
 
 	tmpstr = (char *) malloc(len - 3);
-	drda_local_string2remote(drda, (char*)&buf[4], len - 4, tmpstr);
+	drda_remote_string2local(drda, &buf[4], len - 4, (unsigned char*)tmpstr);
 
 	if (drda->sat_srvrlslv) { free(drda->sat_srvrlslv); }
 	drda->sat_srvrlslv = strdup(tmpstr);
@@ -560,7 +575,7 @@ int ddm_read_prdid(DRDA *drda, unsigned char *buf)
 	}
 
 	tmpstr = (char *) malloc(9);
-	drda_local_string2remote(drda, (char*)&buf[4], 8, tmpstr);
+	drda_remote_string2local(drda, &buf[4], 8, (unsigned char*)tmpstr);
 	drda_log(0,stderr, "%s object\n",cpname);
 	drda_log(0,stderr, "Len of message: %d\n", len);
 	drda_log(0,stderr, "prdid: %s\n", tmpstr);
@@ -582,7 +597,7 @@ int ddm_read_typdefnam(DRDA *drda, unsigned char *buf)
 	}
 
 	tmpstr = (char *) malloc(len - 4);
-	drda_local_string2remote(drda, (char*)&buf[4], len - 4, tmpstr);
+	drda_remote_string2local(drda, &buf[4], len - 4, (unsigned char*)tmpstr);
 	drda->typdefnam = strdup(tmpstr);
 	drda_log(0,stderr, "%s object\n",cpname);
 	drda_log(0,stderr, "Len of message: %d\n", len);

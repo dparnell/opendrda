@@ -20,8 +20,8 @@ extern "C" {
 #include <netdb.h>
 #include <errno.h>
 
-#include <drdatypes.h>
-#include <ddm.h>
+#include "drdatypes.h"
+#include "ddm.h"
 
 #define DRDA_PRDID "OPD00020"
 
@@ -251,9 +251,9 @@ void drda_put_int4(unsigned char *buf, DRDA_INT2 val);
 DRDA_INT2 drda_get_endian_int2(DRDA *drda, unsigned char *buf);
 DRDA_INT4 drda_get_endian_int4(DRDA *drda, unsigned char *buf);
 
-char *drda_remote_string2local       (DRDA *drda, char *in_buf, size_t in_bytes,  char *out_buf);
-char *drda_local_string2remote       (DRDA *drda, char *in_buf, size_t in_bytes,  char *out_buf);
-void drda_local_string2remote_pad    (DRDA *drda, char *in_buf, size_t out_bytes, char *out_buf);
+unsigned char *drda_remote_string2local       (DRDA *drda, unsigned char *in_buf, size_t in_bytes,  unsigned char *out_buf);
+unsigned char *drda_local_string2remote       (DRDA *drda, unsigned char *in_buf, size_t in_bytes,  unsigned char *out_buf);
+void drda_local_string2remote_pad    (DRDA *drda, unsigned char *in_buf, size_t out_bytes, unsigned char *out_buf);
 
 void drda_log(int debug_lvl, FILE *dumpfile, const char *fmt, ...);
     

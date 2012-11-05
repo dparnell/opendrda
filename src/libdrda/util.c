@@ -156,7 +156,7 @@ void drda_put_int4(unsigned char *buf, DRDA_INT2 val)
 	buf[3] = (val & 0x000000FF);
 }
 
-char *drda_remote_string2local(DRDA *drda, char *in_buf, size_t in_bytes, char *out_buf)
+unsigned char *drda_remote_string2local(DRDA *drda, unsigned char *in_buf, size_t in_bytes, unsigned char *out_buf)
 {
     iconv_t cd;
     char *in_ptr, *out_ptr;
@@ -165,16 +165,16 @@ char *drda_remote_string2local(DRDA *drda, char *in_buf, size_t in_bytes, char *
 	cd = iconv_open (drda->local_encoding, drda->remote_encoding);
     if(cd == (iconv_t)(-1)) {
         // OSX doesn't seem to have EBCDIC compiled in to its version of iconv
-        int i;
+        int i;        
         for(i=0; i<in_bytes; i++) {
             out_buf[i] = e2a[in_buf[i]];
         }
-        out_buf[in_bytes+1] = '\0';
+        out_buf[in_bytes] = '\0';
     } else {
         out_bytes = in_bytes + 1;
         orig_bytes = in_bytes + 1;
-        in_ptr = in_buf;
-        out_ptr = out_buf;
+        in_ptr = (char*)in_buf;
+        out_ptr = (char*)out_buf;
         iconv(cd, &in_ptr, &in_bytes, &out_ptr, &out_bytes);
         iconv_close(cd);
         out_buf[orig_bytes-1]='\0';
@@ -183,7 +183,7 @@ char *drda_remote_string2local(DRDA *drda, char *in_buf, size_t in_bytes, char *
 	return out_buf;
 }
 
-char *drda_local_string2remote(DRDA *drda, char *in_buf, size_t in_bytes, char *out_buf)
+unsigned char *drda_local_string2remote(DRDA *drda, unsigned char *in_buf, size_t in_bytes, unsigned char *out_buf)
 {
     iconv_t cd;
     char *in_ptr, *out_ptr;
@@ -200,8 +200,8 @@ char *drda_local_string2remote(DRDA *drda, char *in_buf, size_t in_bytes, char *
     } else {
         out_bytes = in_bytes + 1;
         orig_bytes = in_bytes + 1;
-        in_ptr = in_buf;
-        out_ptr = out_buf;
+        in_ptr = (char*)in_buf;
+        out_ptr = (char*)out_buf;
         iconv(cd, &in_ptr, &in_bytes, &out_ptr, &out_bytes);
         iconv_close(cd);
         out_buf[orig_bytes-1]='\0';
@@ -210,7 +210,7 @@ char *drda_local_string2remote(DRDA *drda, char *in_buf, size_t in_bytes, char *
 	return out_buf;
 }
 
-void drda_local_string2remote_pad(DRDA *drda, char *in_buf, size_t out_bytes, char *out_buf)
+void drda_local_string2remote_pad(DRDA *drda, unsigned char *in_buf, size_t out_bytes, unsigned char *out_buf)
 {
     iconv_t cd;
     size_t in_bytes;
@@ -220,7 +220,7 @@ void drda_local_string2remote_pad(DRDA *drda, char *in_buf, size_t out_bytes, ch
     size_t cpy_in_bytes, cpy_out_bytes;
     int rc;
 
-    in_bytes = strlen(in_buf);
+    in_bytes = strlen((char*)in_buf);
 	cd = iconv_open (drda->remote_encoding, drda->local_encoding);
     if(cd == (iconv_t)(-1)) {
         int i;        
@@ -232,11 +232,11 @@ void drda_local_string2remote_pad(DRDA *drda, char *in_buf, size_t out_bytes, ch
             out_buf[i] = a2e[in_buf[i]];
         }
     } else {
-        p_in_buf      = in_buf;
+        p_in_buf      = (char*)in_buf;
         p_p_in_buf    = &p_in_buf;
         /* I (tje, 2001-08-06) do not understand why I cannot do
             this within the call to iconv.) */
-        cpy_out_buf   = out_buf;
+        cpy_out_buf   = (char*)out_buf;
         cpy_in_bytes  = in_bytes;
         cpy_out_bytes = out_bytes;
 

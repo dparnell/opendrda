@@ -6,19 +6,19 @@
 #include <stdarg.h>
 #include <time.h>
 
-#define DRDALOG 1
+// #define DRDALOG 1
 
 void drda_dump_buf(
    FILE 	 *dumpfile, 
    const void    *buf,     
    int            length)  
 {
+#if DRDALOG
    int                   i;
    int                   j;
    const int             bytesPerLine = 16;
    const unsigned char  *data         = buf;
 
-#if DRDALOG
    for(i=0; i<length; i+=bytesPerLine) {
 
          fprintf(dumpfile, "%04x  ", i);
@@ -46,12 +46,12 @@ void drda_dump_buf(
   
 void drda_log(int debug_lvl, FILE *dumpfile, const char *fmt, ...)
 {
+#if DRDALOG
 int j = 0;
 va_list   ap;
 char *ptr;
 char mask[255];
 
-#if DRDALOG
 	va_start(ap, fmt);
       
 	for(ptr = (char *) fmt; *ptr != '\0'; ptr++) {
