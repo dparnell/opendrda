@@ -1,2 +1,13 @@
 CVS
 .DS_Store
+COPYING
+aclocal.m4
+autom4te.cache
+config.guess
+config.log
+config.sub
+configure
+depcomp
+install-sh
+ltmain.sh
+missing
